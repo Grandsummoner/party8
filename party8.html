@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Finger Picker Pro - Standalone</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #030712;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      touch-action: none;
+    }
+    #canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    .ui-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 16px;
+    }
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: auto;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 8px 16px;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      max-width: 600px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .mode-select {
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    .mode-select option {
+      background: #0f172a;
+      color: #fff;
+    }
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.2s;
+    }
+    .btn-icon:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .instruction-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .instruction-center.hidden {
+      opacity: 0;
+    }
+    .instruction-center h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #f8fafc;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+    .instruction-center p {
+      font-size: 14px;
+      color: #94a3b8;
+    }
+    .collapsed-bar {
+      pointer-events: auto;
+      margin: 0 auto;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      padding: 8px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
+      transform: translateY(150%);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .collapsed-bar.show {
+      transform: translateY(0);
+    }
+    .collapsed-bar .title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+    }
+    .collapsed-bar button {
+      background: #3b82f6;
+      border: none;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas"></canvas>
+
+  <div class="ui-layer">
+    <div class="top-bar">
+      <select id="modeSelect" class="mode-select">
+        <option value="classic">⚡ Classic (1 Winner)</option>
+        <option value="gift">🎁 Santa & Kiddo (Sleigh Drop)</option>
+        <option value="pub">🍻 Pub Downer (Drink Payer)</option>
+        <option value="restaurant">🍽️ Gourmet Treat (Bill Split)</option>
+        <option value="survival">🔥 Survival (Sudden Death)</option>
+      </select>
+      <div style="display: flex; gap: 8px;">
+        <button id="soundToggle" class="btn-icon" title="Toggle Sound">🔊</button>
+        <button id="resetBtn" class="btn-icon" title="Reset Table">🔄</button>
+      </div>
+    </div>
+
+    <div id="instruction" class="instruction-center">
+      <h2>Place 2+ Fingers On Screen</h2>
+      <p>Hold steady to trigger the selection</p>
+    </div>
+
+    <div id="resultBar" class="collapsed-bar">
+      <span id="resultText" class="title">Result Decided</span>
+      <button id="againBtn">Play Again</button>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // 1. SYNTHESIZED SOUND ENGINE (Web Audio API)
+    // ==========================================
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+      playTouch(index) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        const notes = [523.25, 587.33, 659.25, 783.99, 880.0, 1046.5];
+        osc.frequency.setValueAtTime(notes[index % notes.length], now);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.26);
+      }
+      playTick(progress) {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(300 + progress * 600, now);
+        gain.gain.setValueAtTime(0.15 + progress * 0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.055);
+      }
+      playFanfare() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const chords = [523.25, 659.25, 783.99, 1046.5];
+        chords.forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const t = now + i * 0.08;
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(f, t);
+          gain.gain.setValueAtTime(0.2, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.6);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.65);
+        });
+      }
+      playSleighDrop() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        [523.25, 659.25, 783.99, 1046.5, 1318.5].forEach((f, i) => {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          const t = now + i * 0.1;
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(f, t);
+          gain.gain.setValueAtTime(0.15, t);
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.25);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(t);
+          osc.stop(t + 0.26);
+        });
+      }
+      playSuddenDeath() {
+        if (!this.enabled) return;
+        this.init();
+        if (!this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(80, now);
+        osc.frequency.linearRampToValueAtTime(160, now + 1.2);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 1.3);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 1.35);
+      }
+    }
+
+    const sound = new SoundEngine();
+
+    // ==========================================
+    // 2. STATE & TOUCH TRACKING
+    // ==========================================
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const instruction = document.getElementById('instruction');
+    const resultBar = document.getElementById('resultBar');
+    const resultText = document.getElementById('resultText');
+    const modeSelect = document.getElementById('modeSelect');
+    const soundToggle = document.getElementById('soundToggle');
+    const resetBtn = document.getElementById('resetBtn');
+    const againBtn = document.getElementById('againBtn');
+
+    const COLOR_PALETTE = ['#38BDF8', '#EC4899', '#10B981', '#F59E0B', '#A855F7', '#EF4444', '#FCD34D', '#6366F1'];
+
+    let touches = [];
+    let state = 'idle'; // 'idle' | 'countdown' | 'revealed'
+    let countdownStart = 0;
+    const COUNTDOWN_DURATION = 2400; // ms
+    let currentMode = 'classic';
+    let particles = [];
+    let sleighProgress = 0;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    function updateTouchPoints(e) {
+      if (state === 'revealed') return;
+      const currentTouches = Array.from(e.touches || []);
+      
+      // Update existing or add new
+      const newTouchList = currentTouches.map((t, idx) => {
+        const existing = touches.find(p => p.id === t.identifier);
+        if (existing) {
+          existing.x = t.clientX;
+          existing.y = t.clientY;
+          return existing;
+        }
+        sound.playTouch(touches.length);
+        return {
+          id: t.identifier,
+          x: t.clientX,
+          y: t.clientY,
+          color: COLOR_PALETTE[touches.length % COLOR_PALETTE.length],
+          label: `Player ${touches.length + 1}`,
+          status: 'holding',
+          role: null
+        };
+      });
+
+      touches = newTouchList;
+
+      if (touches.length >= 2 && state === 'idle') {
+        state = 'countdown';
+        countdownStart = performance.now();
+        instruction.classList.add('hidden');
+        resultBar.classList.remove('show');
+      } else if (touches.length < 2 && state === 'countdown') {
+        state = 'idle';
+        instruction.classList.remove('hidden');
+      } else if (touches.length === 0 && state === 'idle') {
+        instruction.classList.remove('hidden');
+      }
+    }
+
+    window.addEventListener('touchstart', (e) => { sound.init(); updateTouchPoints(e); }, { passive: false });
+    window.addEventListener('touchmove', (e) => { updateTouchPoints(e); }, { passive: false });
+    window.addEventListener('touchend', (e) => { updateTouchPoints(e); }, { passive: false });
+    window.addEventListener('touchcancel', (e) => { updateTouchPoints(e); }, { passive: false });
+
+    // Desktop Mouse Fallback (Click to spawn test touch points)
+    let mouseSimCount = 0;
+    window.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.ui-layer') && e.target.tagName !== 'CANVAS') return;
+      if (state === 'revealed') return;
+      sound.init();
+      mouseSimCount++;
+      touches.push({
+        id: mouseSimCount,
+        x: e.clientX,
+        y: e.clientY,
+        color: COLOR_PALETTE[(touches.length) % COLOR_PALETTE.length],
+        label: `Player ${touches.length + 1}`,
+        status: 'holding',
+        role: null
+      });
+      if (touches.length >= 2 && state === 'idle') {
+        state = 'countdown';
+        countdownStart = performance.now();
+        instruction.classList.add('hidden');
+        resultBar.classList.remove('show');
+      }
+    });
+
+    modeSelect.addEventListener('change', (e) => {
+      currentMode = e.target.value;
+      resetGame();
+    });
+
+    soundToggle.addEventListener('click', () => {
+      sound.enabled = !sound.enabled;
+      soundToggle.textContent = sound.enabled ? '🔊' : '🔇';
+    });
+
+    function resetGame() {
+      touches = [];
+      state = 'idle';
+      sleighProgress = 0;
+      instruction.classList.remove('hidden');
+      resultBar.classList.remove('show');
+    }
+    resetBtn.addEventListener('click', resetGame);
+    againBtn.addEventListener('click', resetGame);
+
+    // ==========================================
+    // 3. SELECTION & REVEAL LOGIC
+    // ==========================================
+    function finalizeSelection() {
+      state = 'revealed';
+      sleighProgress = 0;
+
+      if (currentMode === 'classic') {
+        const winnerIndex = Math.floor(Math.random() * touches.length);
+        touches.forEach((t, i) => {
+          t.status = i === winnerIndex ? 'winner' : 'loser';
+        });
+        sound.playFanfare();
+        resultText.textContent = `🏆 ${touches[winnerIndex].label} was chosen!`;
+      } else if (currentMode === 'gift') {
+        const shuffled = [...touches].sort(() => Math.random() - 0.5);
+        shuffled[0].role = 'santa';
+        shuffled[1].role = 'kiddo';
+        shuffled[0].status = 'winner';
+        shuffled[1].status = 'winner';
+        sound.playSleighDrop();
+        resultText.textContent = `🎁 ${shuffled[0].label} is Santa ➔ ${shuffled[1].label} is Kiddo!`;
+      } else if (currentMode === 'pub') {
+        const payerIdx = Math.floor(Math.random() * touches.length);
+        touches.forEach((t, i) => {
+          t.role = i === payerIdx ? 'payer' : 'safe';
+          t.status = i === payerIdx ? 'loser' : 'winner';
+        });
+        sound.playFanfare();
+        resultText.textContent = `🍻 ${touches[payerIdx].label} buys this round!`;
+      } else if (currentMode === 'restaurant') {
+        const buyerIdx = Math.floor(Math.random() * touches.length);
+        touches.forEach((t, i) => {
+          t.role = i === buyerIdx ? 'buyer' : 'diner';
+          t.status = i === buyerIdx ? 'loser' : 'winner';
+        });
+        sound.playFanfare();
+        resultText.textContent = `🍽️ ${touches[buyerIdx].label} treats the table!`;
+      } else if (currentMode === 'survival') {
+        const survivorIdx = Math.floor(Math.random() * touches.length);
+        touches.forEach((t, i) => {
+          t.role = i === survivorIdx ? 'survivor' : 'eliminated';
+          t.status = i === survivorIdx ? 'winner' : 'eliminated';
+        });
+        sound.playSuddenDeath();
+        setTimeout(() => sound.playFanfare(), 800);
+        resultText.textContent = `👑 Sole Survivor: ${touches[survivorIdx].label}!`;
+      }
+
+      // Spawn celebratory particles
+      touches.forEach(t => {
+        if (t.status === 'winner' || t.role === 'kiddo') {
+          for (let i = 0; i < 40; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const spd = 3 + Math.random() * 6;
+            particles.push({
+              x: t.x,
+              y: t.y,
+              vx: Math.cos(angle) * spd,
+              vy: Math.sin(angle) * spd,
+              color: t.color,
+              alpha: 1,
+              life: 0,
+              maxLife: 45
+            });
+          }
+        }
+      });
+
+      // Keep collapsed bar by default
+      resultBar.classList.add('show');
+    }
+
+    // ==========================================
+    // 4. ANIMATION & RENDER LOOP
+    // ==========================================
+    let lastTick = 0;
+
+    function render(now) {
+      ctx.fillStyle = '#030712';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Countdown logic
+      let progress = 0;
+      if (state === 'countdown') {
+        const elapsed = now - countdownStart;
+        progress = Math.min(1, elapsed / COUNTDOWN_DURATION);
+        
+        if (now - lastTick > Math.max(70, 260 - progress * 200)) {
+          sound.playTick(progress);
+          lastTick = now;
+        }
+
+        if (progress >= 1) {
+          finalizeSelection();
+        }
+      }
+
+      // Draw connections between nodes
+      if (touches.length >= 2) {
+        ctx.strokeStyle = state === 'countdown' ? `rgba(255, 255, 255, ${0.1 + progress * 0.4})` : 'rgba(255, 255, 255, 0.08)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (let i = 0; i < touches.length; i++) {
+          for (let j = i + 1; j < touches.length; j++) {
+            ctx.moveTo(touches[i].x, touches[i].y);
+            ctx.lineTo(touches[j].x, touches[j].y);
+          }
+        }
+        ctx.stroke();
+      }
+
+      // Draw Touch Nodes
+      touches.forEach((p, idx) => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+
+        // Animated aura
+        const baseRadius = 42;
+        const pulse = state === 'countdown' ? Math.sin(now * 0.015) * (progress * 15) : 0;
+        const currentRadius = baseRadius + pulse;
+
+        // Glow ring
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = state === 'countdown' ? 25 : 12;
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, 0, currentRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner fill
+        ctx.fillStyle = p.status === 'eliminated' ? 'rgba(239, 68, 68, 0.2)' : 'rgba(15, 23, 42, 0.85)';
+        ctx.fill();
+
+        // Countdown progress ring
+        if (state === 'countdown') {
+          ctx.strokeStyle = '#FFFFFF';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.arc(0, 0, currentRadius + 8, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * progress);
+          ctx.stroke();
+        }
+
+        // Role & Labels
+        ctx.fillStyle = '#FFFFFF';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+
+        if (p.role === 'santa') {
+          ctx.fillText('🎅 SANTA', 0, -currentRadius - 12);
+        } else if (p.role === 'kiddo') {
+          ctx.fillText('🎁 KIDDO', 0, -currentRadius - 12);
+        } else if (p.role === 'payer') {
+          ctx.fillText('💸 PAYS TAB', 0, -currentRadius - 12);
+        } else if (p.role === 'buyer') {
+          ctx.fillText('🍽️ TREATS', 0, -currentRadius - 12);
+        } else if (p.status === 'winner') {
+          ctx.fillText('👑 WINNER', 0, -currentRadius - 12);
+        } else if (p.status === 'eliminated') {
+          ctx.fillText('❌ OUT', 0, -currentRadius - 12);
+        } else {
+          ctx.fillText(p.label, 0, -currentRadius - 10);
+        }
+
+        ctx.restore();
+      });
+
+      // Santa Sleigh Drop Reveal Animation
+      if (currentMode === 'gift' && state === 'revealed') {
+        const santa = touches.find(t => t.role === 'santa');
+        const kiddo = touches.find(t => t.role === 'kiddo');
+        if (santa && kiddo && sleighProgress < 1) {
+          sleighProgress += 0.02;
+          const t = sleighProgress;
+          const sx = santa.x + (kiddo.x - santa.x) * t;
+          const sy = santa.y + (kiddo.y - santa.y) * t - Math.sin(t * Math.PI) * 120;
+
+          // Flying present
+          ctx.save();
+          ctx.translate(sx, sy);
+          ctx.fillStyle = '#EF4444';
+          ctx.shadowColor = '#FBBF24';
+          ctx.shadowBlur = 20;
+          ctx.fillRect(-16, -16, 32, 32);
+          ctx.fillStyle = '#FCD34D';
+          ctx.fillRect(-4, -16, 8, 32);
+          ctx.fillRect(-16, -4, 32, 8);
+          ctx.restore();
+        }
+      }
+
+      // Particle simulation
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const pt = particles[i];
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.life++;
+        pt.alpha = 1 - (pt.life / pt.maxLife);
+
+        ctx.fillStyle = pt.color;
+        ctx.globalAlpha = Math.max(0, pt.alpha);
+        ctx.beginPath();
+        ctx.arc(pt.x, pt.y, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1;
+
+        if (pt.life >= pt.maxLife) {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>
