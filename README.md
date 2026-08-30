@@ -2,6 +2,8 @@
 
 > A high-performance, multi-touch party decision app and random chooser featuring dynamic atmosphere themes, 60 FPS HTML5 canvas physics, procedural Web Audio acoustic synthesis, and themed game modes.
 
+[Start Here.]([https://grandsummoner.github.io/fm-1-helper/FM-1%20Helper.html](https://grandsummoner.github.io/party8/))
+
 ---
 
 ![Module Graphic](./res/Party8.png)
