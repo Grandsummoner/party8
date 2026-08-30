@@ -4,6 +4,8 @@
 
 ---
 
+![Module Graphic](./res/Party8.png)
+
 ## ✨ Features
 
 - **🎯 Multi-Touch Table Support**: Place 2 to 10+ fingers simultaneously on any tablet, touchscreen laptop, or smartphone.
