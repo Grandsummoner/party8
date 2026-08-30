@@ -1,42 +1,34 @@
-# M-Wave FM-1 SysEx Patch Curator Pro
+# ⚡ Finger Picker Pro
 
-A web-based utility designed for the **M-VAVE FM-1** that enables users to curate, manage, and compile custom DX7-compatible SysEx banks. This tool streamlines the process of ingesting voice data and preparing stable, bank-ready files for hardware transmission. [Start Here.](https://grandsummoner.github.io/fm-1-helper/FM-1%20Helper.html)
+> A high-performance, multi-touch party decision app and random chooser featuring dynamic atmosphere themes, 60 FPS HTML5 canvas physics, procedural Web Audio acoustic synthesis, and themed game modes.
+
+---
+
+## ✨ Features
+
+- **🎯 Multi-Touch Table Support**: Place 2 to 10+ fingers simultaneously on any tablet, touchscreen laptop, or smartphone.
+- **🎁 Themed Game Modes**:
+  - **⚡ Classic Mode**: Fair, unbiased single-winner random selection with dynamic shockwaves.
+  - **🎅 Santa & Kiddo ("The Sleigh Drop")**: Designated gift-giver and receiver pairing with animated sleigh flight, stardust trails, and festive unboxing starburst confetti.
+  - **🍻 Pub Downer**: Fast round selector to decide who pays for the next round of drinks.
+  - **🍽️ Gourmet Treat**: Food-themed bill-splitter choosing who treats the table with restaurant cloche animations.
+  - **🔥 Survival Mode ("Sudden Death Showdown")**: Battle Royale round-by-round elimination featuring dual-spotlight plasma clash beams and thunderbolt strikes for the Sole Survivor.
+- **🔊 Synthesized Web Audio Engine**: Zero external MP3 files required. Uses native Web Audio API oscillators for countdown tension ramps, jingles, and duel laser clashing.
+- **📱 Touch-First & Standalone**: Fully responsive, native haptic feedback support, zero lag, and supports running both as a modern React SPA or a zero-dependency standalone `index.html`.
+- **🗂️ Collapsed Results Bar**: Minimalistic floating bottom pill that keeps the interactive table unobstructed while offering instant replays and pairing summaries.
 
 ---
 
-![Module Graphic](./res/FM-1-Helper.png)
+## 🚀 Getting Started
 
-## Features
-
-* **Drag-and-Drop Ingestion**: Easily load standard 4104-byte `.syx` or `.bin` files via drag-and-drop or folder selection.
-* **Intelligent Bank Management**: Organize patches into four distinct banks (A–D) with 32 slots each.
-* **Data Integrity**: Auto-fills empty destination slots with "INIT VOICE" data to prevent performance glitches or truncation errors.
-* **Web MIDI Integration**: Directly transmit curated banks to your FM-1 hardware via the browser.
-* **Sort & Compact**: Built-in sorting and packing utilities to maintain a clean workspace.
-
-## How to Use
-
-* **Request MIDI Access**: Click the **Request Web MIDI Access** button in the top right to link your FM-1 hardware.
-* **Import Sources**: Drop your existing SysEx library files into the **Source Importer** panel.
-* **Curate**:
-    * Drag patches from the **Global Preset Pool** into your target slots in the **Destination Banks**.
-    * Use the **🎲 Roll** button to randomize patches into a bank.
-    * Use the **🔄 Pack** button to remove gaps and align patches.
-* **Export/Send**:
-    * Click **💾 Export Active Bank .SYX** to save a file to your disk.
-    * Click **⚡ Send Active Bank to FM-1** to transmit the data directly via MIDI.
-
-## Technical Specifications
-
-| Feature | Specification |
-| :--- | :--- |
-| **Compatibility** | DX7 SysEx architecture (4104 bytes per bank) |
-| **Browser Support** | Optimized for Chromium-based browsers (Chrome, Edge, Opera) |
-
-## Troubleshooting
-
-* **"No MIDI Hardware Found"**: Ensure your M-VAVE FM-1 is connected via USB and powered on before launching the application.
-* **MIDI Port In Use**: If the MIDI send fails, ensure no other DAW or SysEx librarian software is occupying the MIDI port.
-* **Browser Permissions**: Ensure your browser is allowed to access MIDI devices via the site settings.
+### Option A: Standalone Zero-Dependency (Browser)
+Simply save the standalone `index.html` file on your computer or mobile device and double-click to open it in any modern browser (Chrome, Safari, Edge, Firefox). No servers or installations required!
 
 ---
+
+### Option B: Node.js / Modern Web Development
+
+#### 1. Clone the repository
+```bash
+git clone https://github.com/your-username/finger-picker-pro.git
+cd finger-picker-pro
