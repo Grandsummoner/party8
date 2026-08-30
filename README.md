@@ -22,17 +22,3 @@
 - **🗂️ Collapsed Results Bar**: Minimalistic floating bottom pill that keeps the interactive table unobstructed while offering instant replays and pairing summaries.
 
 ---
-
-## 🚀 Getting Started
-
-### Option A: Standalone Zero-Dependency (Browser)
-Simply save the standalone `party8.html` file on your computer or mobile device and double-click to open it in any modern browser (Chrome, Safari, Edge, Firefox). No servers or installations required!
-
----
-
-### Option B: Clone the repository
-```bash
-git clone https://github.com/Grandsummoner/party8.git
-cd party8
-```
-Then open `party8.html` in a browser, or serve the folder with any static file server.
