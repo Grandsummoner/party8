@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bgGradMask" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="100%" stop-color="#020617" />
+    </radialGradient>
+    <linearGradient id="glowGradMask" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="50%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#ef4444" />
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" fill="url(#bgGradMask)" />
+  <circle cx="256" cy="256" r="140" fill="none" stroke="#06b6d4" stroke-width="6" stroke-dasharray="14 10" opacity="0.4" />
+  <circle cx="256" cy="256" r="100" fill="none" stroke="#f59e0b" stroke-width="6" opacity="0.6" />
+  <circle cx="256" cy="256" r="60" fill="#0f172a" stroke="#ffffff" stroke-width="6" />
+  <path d="M270 160 L210 265 L250 265 L238 345 L305 240 L265 240 Z" fill="#fbbf24" stroke="#ffffff" stroke-width="4" stroke-linejoin="round" />
+  <circle cx="170" cy="190" r="22" fill="#ef4444" stroke="#ffffff" stroke-width="5" />
+  <circle cx="340" cy="200" r="22" fill="#10b981" stroke="#ffffff" stroke-width="5" />
+  <circle cx="330" cy="320" r="22" fill="#a855f7" stroke="#ffffff" stroke-width="5" />
+  <circle cx="180" cy="315" r="22" fill="#06b6d4" stroke="#ffffff" stroke-width="5" />
+</svg>
