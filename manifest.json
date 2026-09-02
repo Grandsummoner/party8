@@ -1,0 +1,28 @@
+{
+  "name": "Party8 - Multi-Touch Party Decisions",
+  "short_name": "Party8",
+  "description": "A high-performance multi-touch party decision app featuring Santa & Kiddo, Buy vs Down, Treat vs Eat, and Survivor modes.",
+  "start_url": "./party8.html",
+  "id": "./party8.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "window-controls-overlay"],
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["games", "utilities", "entertainment"]
+}
