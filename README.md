@@ -2,7 +2,7 @@
 
 > A high-performance, multi-touch party decision app and random chooser featuring dynamic atmosphere themes, 60 FPS HTML5 canvas physics, procedural Web Audio acoustic synthesis, and themed game modes.
 
-[Start Here.](https://grandsummoner.github.io/party8/party8.html)
+[Play Now.](https://grandsummoner.github.io/party8/party8.html)
 
 ---
 
@@ -10,15 +10,12 @@
 
 ## ✨ Features
 
-- **🎯 Multi-Touch Table Support**: Place 2 to 10+ fingers simultaneously on any tablet, touchscreen laptop, or smartphone.
-- **🎁 Themed Game Modes**:
-  - **⚡ Classic Mode**: Fair, unbiased single-winner random selection with dynamic shockwaves.
-  - **🎅 Santa & Kiddo ("The Sleigh Drop")**: Designated gift-giver and receiver pairing with animated sleigh flight, stardust trails, and festive unboxing starburst confetti.
-  - **🍻 Pub Downer**: Fast round selector to decide who pays for the next round of drinks.
-  - **🍽️ Gourmet Treat**: Food-themed bill-splitter choosing who treats the table with restaurant cloche animations.
-  - **🔥 Survival Mode ("Sudden Death Showdown")**: Battle Royale round-by-round elimination featuring dual-spotlight plasma clash beams and thunderbolt strikes for the Sole Survivor.
-- **🔊 Synthesized Web Audio Engine**: Zero external MP3 files required. Uses native Web Audio API oscillators for countdown tension ramps, jingles, and duel laser clashing.
-- **📱 Touch-First & Standalone**: Fully responsive, native haptic feedback support, zero lag, and runs as a zero-dependency standalone `party8.html`.
-- **🗂️ Collapsed Results Bar**: Minimalistic floating bottom pill that keeps the interactive table unobstructed while offering instant replays and pairing summaries.
+- 📱 **Hardware Multi-Touch**: Supports up to 8+ simultaneous fingers with real-time responsive particle halos and sound FX.
+- 💻 **PC / Mouse Mode**: Tap anywhere or use the `+ Place Simulated Finger` and `⚡ Start Countdown` button to test or play with mice/trackpads.
+- 🎁 **Santa & Kiddo Mode**: Santa places the first finger to register as the gift giver; remaining fingers represent the kids. When the timer pops, Santa's target kiddo is selected!
+- 🍻 **Buy vs Down / Treat vs Eat**: Decide who pays the bill or who downs the drink with customized reveal roles.
+- 👑 **Survivor & King of the Hill**: Elimination and crown modes for party showdowns.
+- ⚡ **Audio Synthesizer Engine**: Built-in Web Audio synthesis delivering suspenseful countdown ticks, winner chimes, and tactile haptic feedback.
+- 📴 **100% Offline & PWA Ready**: Install to your home screen or desktop with native fullscreen experience.
 
 ---
