@@ -19,14 +19,16 @@
 - 📴 **100% Offline & PWA Ready**: Install to your home screen or desktop with native fullscreen experience.
 
 
-🕹️ Controls & Navigation
-Place Fingers: Everyone holds their finger on the screen within the arena.
-Trigger: Countdown starts automatically after 2+ fingers are placed (or click the start button in PC mode).
-Dismiss / Reset: Tap the Dismiss button at the bottom or click anywhere to start the next round.
-Settings (⚙️): Change game modes, countdown duration, sound themes, particle density, or force-refresh cache.
-History (📜): View results from previous rounds with timestamps.
+## 🕹️ Controls & Navigation
+
+- Place Fingers: Everyone holds their finger on the screen within the arena.
+- Trigger: Countdown starts automatically after 2+ fingers are placed (or click the start button in PC mode).
+- Dismiss / Reset: Tap the Dismiss button at the bottom or click anywhere to start the next round.
+- Settings (⚙️): Change game modes, countdown duration, sound themes, particle density, or force-refresh cache.
+- History (📜): View results from previous rounds with timestamps.
 
 
-📄 License
-MIT License. Free for personal, party, and commercial use.
+## 📄 License
+- MIT License. Free for personal, party, and commercial use.
+
 ---
