@@ -8,7 +8,7 @@
 
 ![Module Graphic](./res/Party8.png)
 
-## ✨ Features
+## ✨ Features 
 
 - 📱 **Hardware Multi-Touch**: Supports up to 8+ simultaneous fingers with real-time responsive particle halos and sound FX.
 - 💻 **PC / Mouse Mode**: Tap anywhere or use the `+ Place Simulated Finger` and `⚡ Start Countdown` button to test or play with mice/trackpads.
