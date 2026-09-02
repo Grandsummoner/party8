@@ -19,6 +19,7 @@
 - 📴 **100% Offline & PWA Ready**: Install to your home screen or desktop with native fullscreen experience.
 
 
+
 ## 🕹️ Controls & Navigation
 
 - Place Fingers: Everyone holds their finger on the screen within the arena.
@@ -26,6 +27,7 @@
 - Dismiss / Reset: Tap the Dismiss button at the bottom or click anywhere to start the next round.
 - Settings (⚙️): Change game modes, countdown duration, sound themes, particle density, or force-refresh cache.
 - History (📜): View results from previous rounds with timestamps.
+
 
 
 ## 📄 License
